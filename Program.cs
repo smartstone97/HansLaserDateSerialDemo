@@ -1,4 +1,5 @@
 using System;
+using System.Diagnostics;
 using System.Threading;
 using System.Windows.Forms;
 
@@ -6,6 +7,14 @@ namespace HansLaserDateSerialDemo
 {
     internal static class Program
     {
+        private static bool _restartRequested;
+
+        public static void RequestRestart()
+        {
+            _restartRequested = true;
+            Application.Exit();
+        }
+
         [STAThread]
         private static int Main()
         {
@@ -19,11 +28,21 @@ namespace HansLaserDateSerialDemo
                     return 2;
                 }
 
+                LanguageManager.ApplySavedLanguage();
                 Application.EnableVisualStyles();
                 Application.SetCompatibleTextRenderingDefault(false);
                 Application.Run(new MainForm());
+                if (_restartRequested)
+                    RestartAfterMutexReleased(mutex);
                 return 0;
             }
+        }
+
+        private static void RestartAfterMutexReleased(Mutex mutex)
+        {
+            mutex.ReleaseMutex();
+            mutex.Dispose();
+            Process.Start(Application.ExecutablePath);
         }
     }
 }
