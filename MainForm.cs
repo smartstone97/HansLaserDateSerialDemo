@@ -12,6 +12,7 @@ namespace HansLaserDateSerialDemo
     {
         private const string ConfigFile = "config.json";
         private const string AuditFile = @".\mark-audit.csv";
+        private const int MaxLogLines = 1000;
 
         private readonly ToolStripMenuItem _settingsMenuItem;
         private readonly ToolStripMenuItem _viewMenuItem;
@@ -792,7 +793,7 @@ namespace HansLaserDateSerialDemo
             _suppressLogScrollTracking = true;
             try
             {
-                _log.AppendLogText($"{DateTime.Now:HH:mm:ss}  {message}{Environment.NewLine}", shouldAutoScroll);
+                _log.AppendLogText($"{DateTime.Now:HH:mm:ss}  {message}{Environment.NewLine}", shouldAutoScroll, MaxLogLines);
             }
             finally
             {
@@ -888,11 +889,12 @@ namespace HansLaserDateSerialDemo
                 return info.nPos + Math.Max(1, info.nPage) >= info.nMax;
             }
 
-            public void AppendLogText(string text, bool scrollToBottom)
+            public void AppendLogText(string text, bool scrollToBottom, int maxLines)
             {
                 if (scrollToBottom)
                 {
                     AppendText(text);
+                    TrimToRecentLines(maxLines, out _);
                     ScrollToBottom();
                     return;
                 }
@@ -902,10 +904,11 @@ namespace HansLaserDateSerialDemo
                 int selectionLength = SelectionLength;
 
                 AppendText(text);
+                int removedLines = TrimToRecentLines(maxLines, out int removedCharacters);
 
-                SelectionStart = Math.Min(selectionStart, TextLength);
+                SelectionStart = Math.Min(Math.Max(0, selectionStart - removedCharacters), TextLength);
                 SelectionLength = Math.Min(selectionLength, TextLength - SelectionStart);
-                ScrollToLine(firstVisibleLine);
+                ScrollToLine(Math.Max(0, firstVisibleLine - removedLines));
             }
 
             public void ScrollToBottom()
@@ -946,6 +949,35 @@ namespace HansLaserDateSerialDemo
             {
                 int currentFirstLine = GetFirstVisibleLine();
                 SendMessage(Handle, EmLineScroll, IntPtr.Zero, new IntPtr(line - currentFirstLine));
+            }
+
+            private int TrimToRecentLines(int maxLines, out int removedCharacters)
+            {
+                removedCharacters = 0;
+                if (maxLines <= 0)
+                {
+                    removedCharacters = TextLength;
+                    Clear();
+                    return int.MaxValue;
+                }
+
+                string[] lines = Lines;
+                int logLineCount = lines.Length;
+                if (logLineCount > 0 && string.IsNullOrEmpty(lines[logLineCount - 1]))
+                    logLineCount--;
+
+                int removedLines = logLineCount - maxLines;
+                if (removedLines <= 0)
+                    return 0;
+
+                int firstKeptCharacter = GetFirstCharIndexFromLine(removedLines);
+                if (firstKeptCharacter <= 0)
+                    return 0;
+
+                Select(0, firstKeptCharacter);
+                SelectedText = string.Empty;
+                removedCharacters = firstKeptCharacter;
+                return removedLines;
             }
 
             private void OnUserScrollAction()
