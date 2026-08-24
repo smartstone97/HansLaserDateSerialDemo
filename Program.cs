@@ -14,7 +14,7 @@ namespace HansLaserDateSerialDemo
             {
                 if (!firstInstance)
                 {
-                    MessageBox.Show("程序已经在运行，不能启动第二个实例。", "大族激光二开Demo", MessageBoxButtons.OK,
+                    MessageBox.Show(Resources.already_running_message, Resources.app_demo_title, MessageBoxButtons.OK,
                         MessageBoxIcon.Warning);
                     return 2;
                 }

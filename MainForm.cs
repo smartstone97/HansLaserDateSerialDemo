@@ -34,7 +34,7 @@ namespace HansLaserDateSerialDemo
         public MainForm()
         {
             Icon = Icon.ExtractAssociatedIcon(Application.ExecutablePath);
-            Text = $@"激光打标应用 v{Assembly.GetExecutingAssembly().GetName().Version?.ToString(3)}";
+            Text = $@"{Resources.app_name} v{Assembly.GetExecutingAssembly().GetName().Version?.ToString(3)}";
             StartPosition = FormStartPosition.CenterScreen;
             MinimumSize = new Size(980, 680);
             Size = new Size(1080, 720);
@@ -62,25 +62,25 @@ namespace HansLaserDateSerialDemo
                 Padding = new Padding(4, 2, 0, 2),
                 BackColor = Color.White
             };
-            _settingsMenuItem = new ToolStripMenuItem("设置")
+            _settingsMenuItem = new ToolStripMenuItem(Resources.setting)
             {
                 Margin = Padding.Empty,
                 Padding = new Padding(8, 0, 8, 0),
-                ToolTipText = "打开设置"
+                ToolTipText = Resources.open_seetting
             };
-            _settingsMenuItem.DropDownItems.Add("运行设置", null,
+            _settingsMenuItem.DropDownItems.Add(Resources.app_config, null,
                 async delegate { await OpenSettingsAsync(SettingsPage.RunSettings); });
-            _settingsMenuItem.DropDownItems.Add("产品配置", null,
+            _settingsMenuItem.DropDownItems.Add(Resources.prod_config, null,
                 async delegate { await OpenSettingsAsync(SettingsPage.ProductConfiguration); });
             menuStrip.Items.Add(_settingsMenuItem);
 
-            _viewMenuItem = new ToolStripMenuItem("查看")
+            _viewMenuItem = new ToolStripMenuItem(Resources.view)
             {
                 Margin = Padding.Empty,
                 Padding = new Padding(8, 0, 8, 0),
-                ToolTipText = "查看记录"
+                ToolTipText = Resources.view_record
             };
-            _viewMenuItem.DropDownItems.Add("历史记录", null, delegate { OpenHistory(); });
+            _viewMenuItem.DropDownItems.Add(Resources.history, null, delegate { OpenHistory(); });
             menuStrip.Items.Add(_viewMenuItem);
             MainMenuStrip = menuStrip;
 
@@ -128,7 +128,7 @@ namespace HansLaserDateSerialDemo
                 AutoSizeMode = AutoSizeMode.GrowAndShrink,
                 Dock = DockStyle.Fill,
                 Margin = new Padding(0, 0, 0, 8),
-                Text = "当前编号"
+                Text = Resources.current_num
             };
             root.Controls.Add(currentBox, 0, 0);
 
@@ -150,10 +150,10 @@ namespace HansLaserDateSerialDemo
             };
             currentBox.Controls.Add(currentFlow);
 
-            _codeValue = AddValueRow(currentFlow, "编号", "--", 22F, true);
-            _dateValue = AddValueRow(currentFlow, "日期", "--", 10F, false);
-            _serialValue = AddValueRow(currentFlow, "流水号", "--", 10F, false);
-            _pendingWarning = AddValueRow(currentFlow, "状态", "通过工具栏设置应用配置后显示待确认编号", 9F, false);
+            _codeValue = AddValueRow(currentFlow, Resources.num, "--", 22F, true);
+            _dateValue = AddValueRow(currentFlow, Resources.date, "--", 10F, false);
+            _serialValue = AddValueRow(currentFlow, Resources.serial_num, "--", 10F, false);
+            _pendingWarning = AddValueRow(currentFlow, Resources.state, Resources.state_init_message, 9F, false);
             _pendingWarning.ForeColor = Color.FromArgb(180, 96, 0);
 
             GroupBox flowBox = new GroupBox
@@ -161,7 +161,7 @@ namespace HansLaserDateSerialDemo
                 Dock = DockStyle.Fill,
                 Height = 140,
                 Margin = new Padding(0, 0, 0, 8),
-                Text = "操作流程"
+                Text = Resources.op_flow
             };
             root.Controls.Add(flowBox, 0, 1);
 
@@ -175,10 +175,10 @@ namespace HansLaserDateSerialDemo
             for (int i = 0; i < 4; i++)
                 flow.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 25F));
             flowBox.Controls.Add(flow);
-            AddFlowStep(flow, 0, "1", "应用配置", "工具栏设置保存 config.json，初始化设备并加载模板。");
-            AddFlowStep(flow, 1, "2", "占用编号", "状态写入数据库，断电后可恢复。");
-            AddFlowStep(flow, 2, "3", "预览/打标", "P 红光预览不提交；M 正常结束才提交。");
-            AddFlowStep(flow, 3, "4", "确认异常", "S 确认已用或跳过；Q 退出保留待确认编号。");
+            AddFlowStep(flow, 0, "1", Resources.flow_step_config_ready_title, Resources.flow_step_config_ready_text);
+            AddFlowStep(flow, 1, "2", Resources.flow_step_number_ready_title, Resources.flow_step_number_ready_text);
+            AddFlowStep(flow, 2, "3", Resources.flow_step_preview_mark_title, Resources.flow_step_preview_mark_text);
+            AddFlowStep(flow, 3, "4", Resources.flow_step_confirm_exception_title, Resources.flow_step_confirm_exception_text);
 
             TableLayoutPanel actions = new TableLayoutPanel
             {
@@ -192,10 +192,10 @@ namespace HansLaserDateSerialDemo
                 actions.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 25F));
             root.Controls.Add(actions, 0, 2);
 
-            _previewButton = AddActionButton(actions, 0, "P 红光预览");
-            _markButton = AddActionButton(actions, 1, "M 激光打标");
-            _skipButton = AddActionButton(actions, 2, "S 已用/跳过");
-            _exitButton = AddActionButton(actions, 3, "Q 退出");
+            _previewButton = AddActionButton(actions, 0, Resources.action_preview);
+            _markButton = AddActionButton(actions, 1, Resources.action_mark);
+            _skipButton = AddActionButton(actions, 2, Resources.action_skip);
+            _exitButton = AddActionButton(actions, 3, Resources.action_exit);
             _previewButton.Click += async delegate { await PreviewAsync(); };
             _markButton.Click += async delegate { await MarkAsync(); };
             _skipButton.Click += delegate { SkipOrConfirm(); };
@@ -205,7 +205,7 @@ namespace HansLaserDateSerialDemo
             {
                 Dock = DockStyle.Fill,
                 Margin = new Padding(0),
-                Text = "运行日志"
+                Text = Resources.run_log
             };
             root.Controls.Add(logBox, 0, 3);
             _log = new TextBox
@@ -320,11 +320,11 @@ namespace HansLaserDateSerialDemo
             try
             {
                 _configuration = LoadOrCreateConfiguration();
-                Log("已载入 config.json。通过工具栏“设置”修改并应用配置。");
+                Log(Resources.config_loaded_log);
             }
             catch (Exception ex)
             {
-                Log($"载入配置失败：{ex.Message}");
+                Log(string.Format(Resources.config_load_failed_fmt, ex.Message));
             }
         }
 
@@ -340,7 +340,7 @@ namespace HansLaserDateSerialDemo
             }
             catch (Exception ex)
             {
-                MessageBox.Show(this, $"载入配置失败：{ex.Message}", "设置", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(this, string.Format(Resources.config_load_failed_fmt, ex.Message), Resources.setting, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
 
@@ -363,8 +363,8 @@ namespace HansLaserDateSerialDemo
                     errorMessage.Contains("dll") ? MessageBoxButtons.RetryCancel : MessageBoxButtons.OK;
                 DialogResult result = MessageBox.Show(
                     this,
-                    $"启动失败：{errorMessage}",
-                    "启动",
+                    string.Format(Resources.startup_failed_fmt, errorMessage),
+                    Resources.startup_title,
                     messageBoxButtons,
                     MessageBoxIcon.Error,
                     MessageBoxDefaultButton.Button1);
@@ -377,7 +377,7 @@ namespace HansLaserDateSerialDemo
         private async Task<string> StartWithSavedConfigurationAsync()
         {
             if (_busy)
-                return "系统正忙，请稍后重试。";
+                return Resources.busy_retry_message;
 
             AppConfiguration configuration;
             try
@@ -386,7 +386,7 @@ namespace HansLaserDateSerialDemo
             }
             catch (Exception ex)
             {
-                Log($"载入已保存配置失败：{ex.Message}");
+                Log(string.Format(Resources.saved_config_load_failed_fmt, ex.Message));
                 return ex.Message;
             }
 
@@ -395,7 +395,7 @@ namespace HansLaserDateSerialDemo
 
         private async Task<string> ApplyConfigurationAsync(AppConfiguration configuration, bool saveConfiguration)
         {
-            return await RunBusyAsync("正在应用配置……", delegate
+            return await RunBusyAsync(Resources.applying_config_status, delegate
             {
                 if (saveConfiguration)
                     AppConfiguration.Save(ConfigFile, configuration);
@@ -406,7 +406,7 @@ namespace HansLaserDateSerialDemo
                 Invoke(new Action(delegate
                 {
                     DisposeApi();
-                    ClearCurrentReservation("正在重新应用配置，旧设备会话已关闭。");
+                    ClearCurrentReservation(Resources.reapplying_config_message);
                 }));
 
                 HansApi newApi = new HansApi(configuration.DllPath);
@@ -425,7 +425,7 @@ namespace HansLaserDateSerialDemo
                         _store = new SequenceStore(
                             product,
                             CodeGeneratorFactory.Create(product.CodeGeneratorType, product.Pattern));
-                        Log((saveConfiguration ? "配置已保存并应用：" : "已按保存配置启动：") + version);
+                        Log((saveConfiguration ? Resources.config_saved_applied_prefix : Resources.saved_config_started_prefix) + version);
                         ReserveAndDisplayCurrent();
                     }));
                 }
@@ -478,7 +478,7 @@ namespace HansLaserDateSerialDemo
                     : null;
 
                 if (product == null)
-                    throw new InvalidOperationException("请先在设置中选择产品。");
+                    throw new InvalidOperationException(Resources.select_product_required);
 
                 return product;
             }
@@ -487,10 +487,10 @@ namespace HansLaserDateSerialDemo
         private static void ValidateProductTemplate(Product product)
         {
             if (string.IsNullOrWhiteSpace(product.TemplatePath))
-                throw new InvalidDataException("产品缺少打标模板。");
+                throw new InvalidDataException(Resources.product_template_missing);
 
             if (!File.Exists(product.TemplatePath))
-                throw new FileNotFoundException("找不到产品打标模板。", product.TemplatePath);
+                throw new FileNotFoundException(Resources.product_template_not_found, product.TemplatePath);
         }
 
         private async Task PreviewAsync()
@@ -499,18 +499,18 @@ namespace HansLaserDateSerialDemo
             if (reservation == null || _api == null)
                 return;
 
-            await RunBusyAsync("红光预览中……", delegate
+            await RunBusyAsync(Resources.preview_busy, delegate
             {
                 try
                 {
                     MarkEndStatus status = _api.MarkAndWait(true, false, 0, 30 * 1000);
                     AuditLog.Append(AuditFile, "PREVIEW", reservation.Code, status.ToString());
-                    BeginInvoke(new Action(delegate { Log($"红光预览结束：{status}"); }));
+                    BeginInvoke(new Action(delegate { Log(string.Format(Resources.preview_done_fmt, status)); }));
                 }
                 catch (Exception ex)
                 {
                     AuditLog.Append(AuditFile, "PREVIEW_ERROR", reservation.Code, ex.Message);
-                    BeginInvoke(new Action(delegate { Log($"红光预览失败：{ex.Message}"); }));
+                    BeginInvoke(new Action(delegate { Log(string.Format(Resources.preview_failed_fmt, ex.Message)); }));
                 }
             });
         }
@@ -523,8 +523,8 @@ namespace HansLaserDateSerialDemo
                 return;
 
             string prompt = configuration.UseFootPedal
-                ? "已进入激光打标等待，请踩脚踏/给触发信号。"
-                : "将立即激光打标。";
+                ? Resources.mark_wait_foot
+                : Resources.mark_now;
 
             await RunBusyAsync(prompt, delegate
             {
@@ -549,19 +549,19 @@ namespace HansLaserDateSerialDemo
                         AuditLog.Append(AuditFile, "MARK_SUCCESS", reservation.Code, detail);
                         BeginInvoke(new Action(delegate
                         {
-                            Log($"打标正常结束，编号已提交：{reservation.Code}");
+                            Log(string.Format(Resources.mark_success_fmt, reservation.Code));
                             ReserveAndDisplayCurrent();
                         }));
                         return;
                     }
 
                     AuditLog.Append(AuditFile, "MARK_NOT_NORMAL", reservation.Code, detail);
-                    BeginInvoke(new Action(delegate { Log($"打标未正常完成：{status}。编号仍处于待确认状态。"); }));
+                    BeginInvoke(new Action(delegate { Log(string.Format(Resources.mark_not_normal_fmt, status)); }));
                 }
                 catch (Exception ex)
                 {
                     AuditLog.Append(AuditFile, "MARK_ERROR", reservation.Code, ex.Message);
-                    BeginInvoke(new Action(delegate { Log($"打标调用异常：{ex.Message}"); }));
+                    BeginInvoke(new Action(delegate { Log(string.Format(Resources.mark_error_fmt, ex.Message)); }));
                 }
             });
         }
@@ -573,8 +573,8 @@ namespace HansLaserDateSerialDemo
 
             DialogResult result = MessageBox.Show(
                 this,
-                $"确认编号 {_reservation.Code} 已经使用或必须跳过？",
-                "确认已用/跳过",
+                string.Format(Resources.confirm_skip_message_fmt, _reservation.Code),
+                Resources.confirm_skip_title,
                 MessageBoxButtons.YesNo,
                 MessageBoxIcon.Warning,
                 MessageBoxDefaultButton.Button2);
@@ -583,8 +583,8 @@ namespace HansLaserDateSerialDemo
                 return;
 
             _store.SkipOrConfirmAlreadyMarked(_reservation.Code);
-            AuditLog.Append(AuditFile, "SKIP_OR_CONFIRMED", _reservation.Code, "操作员确认该编号已使用或应跳过");
-            Log($"已确认编号已用/跳过：{_reservation.Code}");
+            AuditLog.Append(AuditFile, "SKIP_OR_CONFIRMED", _reservation.Code, Resources.audit_skip_confirmed);
+            Log(string.Format(Resources.skip_confirmed_log_fmt, _reservation.Code));
             ReserveAndDisplayCurrent();
         }
 
@@ -605,28 +605,28 @@ namespace HansLaserDateSerialDemo
 
             if (_api == null || _configuration == null || _product == null)
             {
-                MessageBox.Show(this, "请先启动产品配置和模板，再执行重新打标。", "历史重打标", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show(this, Resources.reprint_missing_current_msg, Resources.reprint_title, MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
 
             if (source.ProductId != _product.Id)
             {
-                MessageBox.Show(this, "请先启动该历史记录所属产品的配置和模板，再执行重新打标。", "历史重打标", MessageBoxButtons.OK,
+                MessageBox.Show(this, Resources.reprint_wrong_product_msg, Resources.reprint_title, MessageBoxButtons.OK,
                     MessageBoxIcon.Warning);
                 return;
             }
 
             DialogResult result = MessageBox.Show(
                 this,
-                $"确认重新打标历史编号 {source.Code}？",
-                "历史重打标",
+                string.Format(Resources.reprint_confirm_fmt, source.Code),
+                Resources.reprint_title,
                 MessageBoxButtons.YesNo,
                 MessageBoxIcon.Warning,
                 MessageBoxDefaultButton.Button2);
             if (result != DialogResult.Yes)
                 return;
 
-            await RunBusyAsync("正在重新打标历史编号...", delegate
+            await RunBusyAsync(Resources.reprint_busy, delegate
             {
                 try
                 {
@@ -654,23 +654,23 @@ namespace HansLaserDateSerialDemo
                             record.State = MarkingRecordStates.Reprinted;
                             record.MarkedAt = now;
                             record.UpdatedAt = now;
-                            record.Remark = AppendRemark(record.Remark, "历史编号重新打标");
+                            record.Remark = AppendRemark(record.Remark, Resources.reprint_remark);
                             dbContext.SaveChanges();
                         }
 
                         AuditLog.Append(AuditFile, "REPRINT_SUCCESS", source.Code, detail);
-                        BeginInvoke(new Action(delegate { Log($"历史编号已重新打标：{source.Code}"); }));
+                        BeginInvoke(new Action(delegate { Log(string.Format(Resources.reprint_success_fmt, source.Code)); }));
                     }
                     else
                     {
                         AuditLog.Append(AuditFile, "REPRINT_NOT_NORMAL", source.Code, detail);
-                        BeginInvoke(new Action(delegate { Log($"历史编号重新打标未正常完成：{status}"); }));
+                        BeginInvoke(new Action(delegate { Log(string.Format(Resources.reprint_not_normal_fmt, status)); }));
                     }
                 }
                 catch (Exception ex)
                 {
                     AuditLog.Append(AuditFile, "REPRINT_ERROR", source.Code, ex.Message);
-                    BeginInvoke(new Action(delegate { Log($"历史编号重新打标异常：{ex.Message}"); }));
+                    BeginInvoke(new Action(delegate { Log(string.Format(Resources.reprint_error_fmt, ex.Message)); }));
                 }
                 finally
                 {
@@ -705,12 +705,12 @@ namespace HansLaserDateSerialDemo
                 _dateValue.Text = _reservation.Date.ToString("yyyy-MM-dd");
                 _serialValue.Text = _reservation.Serial.ToString("0000");
                 _pendingWarning.Text = _reservation.WasAlreadyPending
-                    ? "上次未确认完成；请检查工件/MES 后再重打或跳过。"
-                    : "新编号已占用，等待预览、打标或确认跳过。";
+                    ? Resources.pending_previous_message
+                    : Resources.pending_new_message;
             }
             catch (Exception ex)
             {
-                Log($"准备当前编号失败：{ex.Message}");
+                Log(string.Format(Resources.reserve_failed_fmt, ex.Message));
             }
             finally
             {
@@ -730,7 +730,7 @@ namespace HansLaserDateSerialDemo
             }
             catch (Exception ex)
             {
-                Log($"操作失败：{ex.Message}");
+                Log(string.Format(Resources.operation_failed_fmt, ex.Message));
                 return ex.Message;
             }
             finally

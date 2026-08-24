@@ -25,7 +25,7 @@ namespace HansLaserDateSerialDemo
         {
             _reprintHandler = reprintHandler ?? throw new ArgumentNullException(nameof(reprintHandler));
 
-            Text = "历史打标记录";
+            Text = Resources.history_marking_records;
             StartPosition = FormStartPosition.CenterParent;
             MinimumSize = new Size(920, 560);
             Size = new Size(1040, 660);
@@ -61,21 +61,21 @@ namespace HansLaserDateSerialDemo
             filters.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100));
             shell.Controls.Add(filters, 0, 0);
 
-            AddLabel(filters, 0, "产品");
+            AddLabel(filters, 0, Resources.product);
             _productComboBox = new ComboBox { Dock = DockStyle.Fill, DropDownStyle = ComboBoxStyle.DropDownList, Margin = new Padding(0, 8, 8, 8) };
             filters.Controls.Add(_productComboBox, 1, 0);
 
-            AddLabel(filters, 2, "开始");
+            AddLabel(filters, 2, Resources.start);
             _fromDatePicker = new DateTimePicker { Dock = DockStyle.Fill, Format = DateTimePickerFormat.Short, Margin = new Padding(0, 8, 8, 8) };
             filters.Controls.Add(_fromDatePicker, 3, 0);
 
-            AddLabel(filters, 4, "结束");
+            AddLabel(filters, 4, Resources.end);
             _toDatePicker = new DateTimePicker { Dock = DockStyle.Fill, Format = DateTimePickerFormat.Short, Margin = new Padding(0, 8, 8, 8) };
             filters.Controls.Add(_toDatePicker, 5, 0);
 
-            AddLabel(filters, 6, "状态");
+            AddLabel(filters, 6, Resources.state);
             _stateComboBox = new ComboBox { Dock = DockStyle.Fill, DropDownStyle = ComboBoxStyle.DropDownList, Margin = new Padding(0, 8, 8, 8) };
-            _stateComboBox.Items.Add("全部");
+            _stateComboBox.Items.Add(Resources.all);
             _stateComboBox.Items.Add(MarkingRecordStates.Pending);
             _stateComboBox.Items.Add(MarkingRecordStates.Marked);
             _stateComboBox.Items.Add(MarkingRecordStates.Skipped);
@@ -83,7 +83,7 @@ namespace HansLaserDateSerialDemo
             _stateComboBox.SelectedIndex = 0;
             filters.Controls.Add(_stateComboBox, 7, 0);
 
-            AddLabel(filters, 8, "编号");
+            AddLabel(filters, 8, Resources.num);
             _keywordTextBox = new TextBox { Dock = DockStyle.Fill, Margin = new Padding(0, 9, 0, 8) };
             filters.Controls.Add(_keywordTextBox, 9, 0);
 
@@ -98,15 +98,15 @@ namespace HansLaserDateSerialDemo
                 SelectionMode = DataGridViewSelectionMode.FullRowSelect,
                 RowHeadersVisible = false
             };
-            _recordsGrid.Columns.Add(new DataGridViewTextBoxColumn { HeaderText = "编号", DataPropertyName = "Code", Width = 180 });
-            _recordsGrid.Columns.Add(new DataGridViewTextBoxColumn { HeaderText = "产品", DataPropertyName = "ProductName", Width = 160 });
-            _recordsGrid.Columns.Add(new DataGridViewTextBoxColumn { HeaderText = "客户料号", DataPropertyName = "CustomerPartNumber", Width = 130 });
-            _recordsGrid.Columns.Add(new DataGridViewTextBoxColumn { HeaderText = "日期", DataPropertyName = "BusinessDate", Width = 100 });
-            _recordsGrid.Columns.Add(new DataGridViewTextBoxColumn { HeaderText = "流水号", DataPropertyName = "Serial", Width = 80 });
-            _recordsGrid.Columns.Add(new DataGridViewTextBoxColumn { HeaderText = "状态", DataPropertyName = "State", Width = 100 });
-            _recordsGrid.Columns.Add(new DataGridViewTextBoxColumn { HeaderText = "创建时间", DataPropertyName = "CreatedAt", Width = 150 });
-            _recordsGrid.Columns.Add(new DataGridViewTextBoxColumn { HeaderText = "打标时间", DataPropertyName = "MarkedAt", Width = 150 });
-            _recordsGrid.Columns.Add(new DataGridViewTextBoxColumn { HeaderText = "备注", DataPropertyName = "Remark", AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill });
+            _recordsGrid.Columns.Add(new DataGridViewTextBoxColumn { HeaderText = Resources.num, DataPropertyName = "Code", Width = 180 });
+            _recordsGrid.Columns.Add(new DataGridViewTextBoxColumn { HeaderText = Resources.product, DataPropertyName = "ProductName", Width = 160 });
+            _recordsGrid.Columns.Add(new DataGridViewTextBoxColumn { HeaderText = Resources.customer_part_number, DataPropertyName = "CustomerPartNumber", Width = 130 });
+            _recordsGrid.Columns.Add(new DataGridViewTextBoxColumn { HeaderText = Resources.date, DataPropertyName = "BusinessDate", Width = 100 });
+            _recordsGrid.Columns.Add(new DataGridViewTextBoxColumn { HeaderText = Resources.serial_num, DataPropertyName = "Serial", Width = 80 });
+            _recordsGrid.Columns.Add(new DataGridViewTextBoxColumn { HeaderText = Resources.state, DataPropertyName = "State", Width = 100 });
+            _recordsGrid.Columns.Add(new DataGridViewTextBoxColumn { HeaderText = Resources.created_at, DataPropertyName = "CreatedAt", Width = 150 });
+            _recordsGrid.Columns.Add(new DataGridViewTextBoxColumn { HeaderText = Resources.marked_at, DataPropertyName = "MarkedAt", Width = 150 });
+            _recordsGrid.Columns.Add(new DataGridViewTextBoxColumn { HeaderText = Resources.remark, DataPropertyName = "Remark", AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill });
             _recordsGrid.SelectionChanged += delegate { UpdateButtons(); };
             shell.Controls.Add(_recordsGrid, 0, 1);
 
@@ -119,15 +119,15 @@ namespace HansLaserDateSerialDemo
             };
             shell.Controls.Add(buttons, 0, 2);
 
-            Button closeButton = new Button { Width = 90, Height = 32, Text = "关闭" };
+            Button closeButton = new Button { Width = 90, Height = 32, Text = Resources.close };
             closeButton.Click += delegate { Close(); };
             buttons.Controls.Add(closeButton);
 
-            _reprintButton = new Button { Width = 110, Height = 32, Text = "重新打标" };
+            _reprintButton = new Button { Width = 110, Height = 32, Text = Resources.reprint };
             _reprintButton.Click += async delegate { await ReprintSelectedAsync(); };
             buttons.Controls.Add(_reprintButton);
 
-            Button searchButton = new Button { Width = 90, Height = 32, Text = "查询" };
+            Button searchButton = new Button { Width = 90, Height = 32, Text = Resources.search };
             searchButton.Click += delegate { RefreshRecords(); };
             buttons.Controls.Add(searchButton);
 
@@ -175,7 +175,7 @@ namespace HansLaserDateSerialDemo
 
             _productComboBox.BeginUpdate();
             _productComboBox.Items.Clear();
-            _productComboBox.Items.Add(new Selection<Product>("全部", null));
+            _productComboBox.Items.Add(new Selection<Product>(Resources.all, null));
             foreach (Product product in _products)
                 _productComboBox.Items.Add(new Selection<Product>(BuildProductLabel(product), product));
             _productComboBox.EndUpdate();
@@ -215,8 +215,8 @@ namespace HansLaserDateSerialDemo
                 DateTime toExclusive = _toDatePicker.Value.Date.AddDays(1);
                 query = query.Where(record => record.BusinessDate >= from && record.BusinessDate < toExclusive);
 
-                string state = _stateComboBox.SelectedItem == null ? "全部" : _stateComboBox.SelectedItem.ToString();
-                if (!string.Equals(state, "全部", StringComparison.Ordinal))
+                string state = _stateComboBox.SelectedItem == null ? Resources.all : _stateComboBox.SelectedItem.ToString();
+                if (!string.Equals(state, Resources.all, StringComparison.Ordinal))
                     query = query.Where(record => record.State == state);
 
                 string keyword = _keywordTextBox.Text.Trim();

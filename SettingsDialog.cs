@@ -41,7 +41,7 @@ namespace HansLaserDateSerialDemo
                 throw new ArgumentNullException(nameof(configuration));
 
             _initialPage = initialPage;
-            Text = initialPage == SettingsPage.ProductConfiguration ? "产品配置" : "运行设置";
+            Text = initialPage == SettingsPage.ProductConfiguration ? Resources.prod_config : Resources.app_config;
             StartPosition = FormStartPosition.CenterParent;
             MinimumSize = new Size(760, 620);
             Size = new Size(860, 700);
@@ -61,25 +61,25 @@ namespace HansLaserDateSerialDemo
 
             FlowLayoutPanel settingsRoot = CreateVerticalFlow();
 
-            GroupBox basicBox = AddGroup(settingsRoot, "基础配置", 192);
+            GroupBox basicBox = AddGroup(settingsRoot, Resources.basic_config, 192);
             TableLayoutPanel basicGrid = CreateFormGrid(3);
             basicBox.Controls.Add(basicGrid);
 
             _machinePathTextBox = AddPathSettingTextBox(
                 basicGrid,
                 0,
-                "设备配置目录",
-                delegate(TextBox textBox) { BrowseFolder(textBox, "选择设备配置目录"); });
+                Resources.device_config_dir,
+                delegate(TextBox textBox) { BrowseFolder(textBox, Resources.browse_device_config_dir); });
             _dllVersionLabel = AddDllVersionRow(basicGrid, 1);
-            _variableTextAliasTextBox = AddSettingTextBox(basicGrid, 2, "可变文本别名");
+            _variableTextAliasTextBox = AddSettingTextBox(basicGrid, 2, Resources.variable_text_alias);
 
-            GroupBox generatorBox = AddGroup(settingsRoot, "产品", 82);
+            GroupBox generatorBox = AddGroup(settingsRoot, Resources.product, 82);
             TableLayoutPanel generatorGrid = CreateFormGrid(1);
             generatorBox.Controls.Add(generatorGrid);
 
-            _productComboBox = AddComboBox(generatorGrid, 0, "选择产品");
+            _productComboBox = AddComboBox(generatorGrid, 0, Resources.select_product);
 
-            GroupBox pedalBox = AddGroup(settingsRoot, "脚踏触发", 104);
+            GroupBox pedalBox = AddGroup(settingsRoot, Resources.foot_pedal_trigger, 104);
             TableLayoutPanel pedalGrid = new TableLayoutPanel
             {
                 Dock = DockStyle.Fill,
@@ -96,14 +96,14 @@ namespace HansLaserDateSerialDemo
             _useFootPedal = new CheckBox
             {
                 Dock = DockStyle.Fill,
-                Text = "启用脚踏触发"
+                Text = Resources.enable_foot_pedal
             };
             pedalGrid.Controls.Add(_useFootPedal, 0, 0);
 
             Label timeoutLabel = new Label
             {
                 Dock = DockStyle.Fill,
-                Text = "等待超时",
+                Text = Resources.timeout,
                 TextAlign = ContentAlignment.MiddleLeft
             };
             pedalGrid.Controls.Add(timeoutLabel, 1, 0);
@@ -121,7 +121,7 @@ namespace HansLaserDateSerialDemo
             Label secondsLabel = new Label
             {
                 Dock = DockStyle.Fill,
-                Text = "秒",
+                Text = Resources.seconds,
                 TextAlign = ContentAlignment.MiddleLeft
             };
             pedalGrid.Controls.Add(secondsLabel, 3, 0);
@@ -150,18 +150,18 @@ namespace HansLaserDateSerialDemo
                 ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.DisableResizing
             };
             _productsGrid.Columns.Add(new DataGridViewTextBoxColumn
-                { HeaderText = "名称", DataPropertyName = "Name", Width = 150 });
+                { HeaderText = Resources.name, DataPropertyName = "Name", Width = 150 });
             _productsGrid.Columns.Add(new DataGridViewTextBoxColumn
-                { HeaderText = "客户料号", DataPropertyName = "CustomerPartNumber", Width = 150 });
+                { HeaderText = Resources.customer_part_number, DataPropertyName = "CustomerPartNumber", Width = 150 });
             _productsGrid.Columns.Add(new DataGridViewTextBoxColumn
                 { HeaderText = "Shipcode", DataPropertyName = "Shipcode", Width = 90 });
             _productsGrid.Columns.Add(new DataGridViewTextBoxColumn
-                { HeaderText = "起始流水", DataPropertyName = "SerialStartValue", Width = 90 });
+                { HeaderText = Resources.serial_start, DataPropertyName = "SerialStartValue", Width = 90 });
             _productsGrid.Columns.Add(new DataGridViewTextBoxColumn
-                { HeaderText = "生成器", DataPropertyName = "CodeGeneratorType", Width = 100 });
+                { HeaderText = Resources.generator, DataPropertyName = "CodeGeneratorType", Width = 100 });
             _productsGrid.Columns.Add(new DataGridViewTextBoxColumn
             {
-                HeaderText = "模板", DataPropertyName = "TemplatePath",
+                HeaderText = Resources.template, DataPropertyName = "TemplatePath",
                 AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill, MinimumWidth = 150
             });
             _productsGrid.Columns.Add(new DataGridViewTextBoxColumn
@@ -188,15 +188,15 @@ namespace HansLaserDateSerialDemo
             };
             productsRoot.Controls.Add(productButtons, 0, 1);
 
-            _deleteProductButton = new Button { Width = 90, Height = 30, Text = "删除" };
+            _deleteProductButton = new Button { Width = 90, Height = 30, Text = Resources.delete };
             _deleteProductButton.Click += delegate { DeleteSelectedProduct(); };
             productButtons.Controls.Add(_deleteProductButton);
 
-            _editProductButton = new Button { Width = 90, Height = 30, Text = "编辑" };
+            _editProductButton = new Button { Width = 90, Height = 30, Text = Resources.edit };
             _editProductButton.Click += delegate { OpenSelectedProductEditor(); };
             productButtons.Controls.Add(_editProductButton);
 
-            Button addProductButton = new Button { Width = 90, Height = 30, Text = "新增" };
+            Button addProductButton = new Button { Width = 90, Height = 30, Text = Resources.new_product };
             addProductButton.Click += delegate { OpenProductEditor(null); };
             productButtons.Controls.Add(addProductButton);
 
@@ -209,17 +209,6 @@ namespace HansLaserDateSerialDemo
                 WrapContents = false
             };
             shell.Controls.Add(buttons, 0, 1);
-
-            // Button saveButton = new Button { Width = 120, Height = 34, Text = "保存并应用" };
-            // saveButton.Click += delegate { SaveAndClose(); };
-            // buttons.Controls.Add(saveButton);
-            //
-            // Button cancelButton = new Button { Width = 90, Height = 34, Text = "取消" };
-            // cancelButton.Click += delegate { DialogResult = DialogResult.Cancel; };
-            // buttons.Controls.Add(cancelButton);
-            //
-            // AcceptButton = saveButton;
-            // CancelButton = cancelButton;
 
             LoadProducts(configuration.ProductId);
             ShowConfiguration(configuration);
@@ -362,7 +351,7 @@ namespace HansLaserDateSerialDemo
             {
                 Dock = DockStyle.Fill,
                 Margin = new Padding(0, 6, 0, 4),
-                Text = "打开"
+                Text = Resources.open
             };
             browseButton.Click += delegate { browseAction(textBox); };
             panel.Controls.Add(browseButton, 1, 0);
@@ -371,7 +360,7 @@ namespace HansLaserDateSerialDemo
 
         private Label AddDllVersionRow(TableLayoutPanel grid, int row)
         {
-            AddLabel(grid, row, "DLL 版本");
+            AddLabel(grid, row, Resources.dll_version);
 
             TableLayoutPanel panel = new TableLayoutPanel
             {
@@ -387,7 +376,7 @@ namespace HansLaserDateSerialDemo
             {
                 Dock = DockStyle.Fill,
                 Margin = new Padding(0, 6, 8, 4),
-                Text = "读取版本"
+                Text = Resources.read_version
             };
             readButton.Click += delegate { ReadDllVersion(); };
             panel.Controls.Add(readButton, 0, 0);
@@ -397,7 +386,7 @@ namespace HansLaserDateSerialDemo
                 Dock = DockStyle.Fill,
                 AutoEllipsis = true,
                 TextAlign = ContentAlignment.MiddleLeft,
-                Text = "未读取"
+                Text = Resources.not_read
             };
             panel.Controls.Add(versionLabel, 1, 0);
             return versionLabel;
@@ -491,8 +480,8 @@ namespace HansLaserDateSerialDemo
             {
                 DialogResult result = MessageBox.Show(
                     GetRootOwner(this),
-                    $"确认删除产品 {product.Name}？",
-                    "产品配置",
+                    string.Format(Resources.confirm_delete_product_fmt, product.Name),
+                    Resources.prod_config,
                     MessageBoxButtons.YesNo,
                     MessageBoxIcon.Warning,
                     MessageBoxDefaultButton.Button2);
@@ -579,7 +568,7 @@ namespace HansLaserDateSerialDemo
             _machinePathTextBox.Text = configuration.MachinePath;
             _variableTextAliasTextBox.Text = configuration.VariableTextAlias;
             _useFootPedal.Checked = configuration.UseFootPedal;
-            _dllVersionLabel.Text = "未读取";
+            _dllVersionLabel.Text = Resources.not_read;
             _footPedalTimeoutSeconds.Value = Math.Max(
                 _footPedalTimeoutSeconds.Minimum,
                 Math.Min(_footPedalTimeoutSeconds.Maximum, configuration.FootPedalTimeoutMs / (decimal)1000));
@@ -608,12 +597,12 @@ namespace HansLaserDateSerialDemo
 
                 LoadProducts(product.Id);
                 SelectProduct(product.Id);
-                MessageBox.Show(GetRootOwner(this), "产品已保存。", "产品配置", MessageBoxButtons.OK,
+                MessageBox.Show(GetRootOwner(this), Resources.product_saved_message, Resources.prod_config, MessageBoxButtons.OK,
                     MessageBoxIcon.Information);
             }
             catch (Exception ex)
             {
-                MessageBox.Show(GetRootOwner(this), $"产品保存失败：{ex.Message}", "产品配置", MessageBoxButtons.OK,
+                MessageBox.Show(GetRootOwner(this), string.Format(Resources.product_save_failed_fmt, ex.Message), Resources.prod_config, MessageBoxButtons.OK,
                     MessageBoxIcon.Warning);
             }
         }
@@ -621,15 +610,15 @@ namespace HansLaserDateSerialDemo
         private static void ValidateProduct(Product product)
         {
             if (string.IsNullOrWhiteSpace(product.Name))
-                throw new InvalidDataException("产品名称不能为空。");
+                throw new InvalidDataException(Resources.product_name_required);
             if (string.IsNullOrWhiteSpace(product.TemplatePath))
-                throw new InvalidDataException("打标模板不能为空。");
+                throw new InvalidDataException(Resources.product_template_required);
             if (string.IsNullOrWhiteSpace(product.Pattern))
-                throw new InvalidDataException("Pattern 不能为空。");
+                throw new InvalidDataException(Resources.pattern_required);
             if (product.SerialStartValue < 1 || product.SerialStartValue > 9999)
-                throw new InvalidDataException("起始流水必须在 1-9999 之间。");
+                throw new InvalidDataException(Resources.serial_start_range);
             if (!IsCodeGeneratorTypeValid(product.CodeGeneratorType))
-                throw new InvalidDataException("生成器无效。");
+                throw new InvalidDataException(Resources.generator_invalid);
         }
 
         private void ReadDllVersion()
@@ -637,7 +626,7 @@ namespace HansLaserDateSerialDemo
             string machinePath = _machinePathTextBox.Text.Trim();
             if (string.IsNullOrWhiteSpace(machinePath))
             {
-                _dllVersionLabel.Text = "请先填写设备配置目录";
+                _dllVersionLabel.Text = Resources.fill_device_config_dir;
                 return;
             }
 
@@ -646,7 +635,7 @@ namespace HansLaserDateSerialDemo
             {
                 if (!File.Exists(dllPath))
                 {
-                    _dllVersionLabel.Text = "读取失败：MachinePath 下没有 HansAdvInterface.dll";
+                    _dllVersionLabel.Text = Resources.read_failed_dll_missing;
                     return;
                 }
 
@@ -657,7 +646,7 @@ namespace HansLaserDateSerialDemo
             }
             catch (Exception ex)
             {
-                _dllVersionLabel.Text = $"读取失败：{ex.Message}";
+                _dllVersionLabel.Text = string.Format(Resources.read_failed_fmt, ex.Message);
             }
         }
 
@@ -742,7 +731,7 @@ namespace HansLaserDateSerialDemo
             }
             catch (Exception ex)
             {
-                MessageBox.Show(GetRootOwner(this), $"设置无效：{ex.Message}", "设置", MessageBoxButtons.OK,
+                MessageBox.Show(GetRootOwner(this), string.Format(Resources.settings_invalid_fmt, ex.Message), Resources.setting, MessageBoxButtons.OK,
                     MessageBoxIcon.Warning);
             }
         }
@@ -772,7 +761,7 @@ namespace HansLaserDateSerialDemo
             {
                 Product = product ?? throw new ArgumentNullException(nameof(product));
 
-                Text = Product.Id == 0 ? "新增产品" : "编辑产品";
+                Text = Product.Id == 0 ? Resources.new_product : Resources.edit_product;
                 StartPosition = FormStartPosition.CenterParent;
                 MinimumSize = new Size(620, 420);
                 Size = new Size(700, 460);
@@ -793,15 +782,15 @@ namespace HansLaserDateSerialDemo
                 grid.ColumnStyles[0].Width = 110;
                 shell.Controls.Add(grid, 0, 0);
 
-                _nameTextBox = AddDialogTextBox(grid, 0, "名称");
-                _customerPartNumberTextBox = AddDialogTextBox(grid, 1, "客户料号");
+                _nameTextBox = AddDialogTextBox(grid, 0, Resources.name);
+                _customerPartNumberTextBox = AddDialogTextBox(grid, 1, Resources.customer_part_number);
                 _shipcodeBox = AddDialogNumeric(grid, 2, "Shipcode", 0, 999999);
-                _serialStartValueBox = AddDialogNumeric(grid, 3, "起始流水", 1, 9999);
-                _codeGeneratorComboBox = AddDialogComboBox(grid, 4, "生成器");
+                _serialStartValueBox = AddDialogNumeric(grid, 3, Resources.serial_start, 1, 9999);
+                _codeGeneratorComboBox = AddDialogComboBox(grid, 4, Resources.generator);
                 _codeGeneratorComboBox.Items.Add(CodeGeneratorTypes.EcoFlow);
                 _codeGeneratorComboBox.Items.Add(CodeGeneratorTypes.Normal);
-                _templatePathTextBox = AddDialogPathTextBox(grid, 5, "打标模板",
-                    delegate(TextBox textBox) { BrowseFile(textBox, "选择打标模板", "打标模板 (*.HS)|*.HS|所有文件 (*.*)|*.*"); });
+                _templatePathTextBox = AddDialogPathTextBox(grid, 5, Resources.marking_template,
+                    delegate(TextBox textBox) { BrowseFile(textBox, Resources.select_marking_template, "HS (*.HS)|*.HS|All files (*.*)|*.*"); });
                 _patternTextBox = AddDialogTextBox(grid, 6, "Pattern");
 
                 FlowLayoutPanel buttons = new FlowLayoutPanel
@@ -813,11 +802,11 @@ namespace HansLaserDateSerialDemo
                 };
                 shell.Controls.Add(buttons, 0, 1);
 
-                Button saveButton = new Button { Width = 90, Height = 32, Text = "保存" };
+                Button saveButton = new Button { Width = 90, Height = 32, Text = Resources.save };
                 saveButton.Click += delegate { SaveAndClose(); };
                 buttons.Controls.Add(saveButton);
 
-                Button cancelButton = new Button { Width = 90, Height = 32, Text = "取消" };
+                Button cancelButton = new Button { Width = 90, Height = 32, Text = Resources.cancel };
                 cancelButton.Click += delegate { DialogResult = DialogResult.Cancel; };
                 buttons.Controls.Add(cancelButton);
 
@@ -859,7 +848,7 @@ namespace HansLaserDateSerialDemo
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show(GetRootOwner(this), $"产品设置无效：{ex.Message}", "产品配置",
+                    MessageBox.Show(GetRootOwner(this), string.Format(Resources.product_settings_invalid_fmt, ex.Message), Resources.prod_config,
                         MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 }
             }
@@ -977,7 +966,7 @@ namespace HansLaserDateSerialDemo
                 {
                     Dock = DockStyle.Fill,
                     Margin = new Padding(0, 6, 0, 4),
-                    Text = "打开"
+                    Text = Resources.open
                 };
                 browseButton.Click += delegate { browseAction(textBox); };
                 panel.Controls.Add(browseButton, 1, 0);

@@ -1,0 +1,474 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="app_config" xml:space="preserve">
+    <value>运行设置</value>
+  </data>
+  <data name="app_name" xml:space="preserve">
+    <value>激光打标应用</value>
+  </data>
+  <data name="current_num" xml:space="preserve">
+    <value>当前编号</value>
+  </data>
+  <data name="date" xml:space="preserve">
+    <value>日期</value>
+  </data>
+  <data name="history" xml:space="preserve">
+    <value>历史记录</value>
+  </data>
+  <data name="num" xml:space="preserve">
+    <value>编号</value>
+  </data>
+  <data name="open" xml:space="preserve">
+    <value>打开</value>
+  </data>
+  <data name="open_seetting" xml:space="preserve">
+    <value>打开设置</value>
+  </data>
+  <data name="prod_config" xml:space="preserve">
+    <value>产品配置</value>
+  </data>
+  <data name="serial_num" xml:space="preserve">
+    <value>流水号</value>
+  </data>
+  <data name="setting" xml:space="preserve">
+    <value>设置</value>
+  </data>
+  <data name="state" xml:space="preserve">
+    <value>状态</value>
+  </data>
+  <data name="op_flow" xml:space="preserve">
+    <value>操作流程</value>
+  </data>
+  <data name="view" xml:space="preserve">
+    <value>查看</value>
+  </data>
+  <data name="view_record" xml:space="preserve">
+    <value>查看记录</value>
+  </data>
+  <data name="state_init_message" xml:space="preserve">
+    <value>通过工具栏设置应用配置后显示待确认编号</value>
+  </data>
+  <data name="action_exit" xml:space="preserve">
+    <value>Q 退出</value>
+  </data>
+  <data name="action_mark" xml:space="preserve">
+    <value>M 激光打标</value>
+  </data>
+  <data name="action_preview" xml:space="preserve">
+    <value>P 红光预览</value>
+  </data>
+  <data name="action_skip" xml:space="preserve">
+    <value>S 已用/跳过</value>
+  </data>
+  <data name="all" xml:space="preserve">
+    <value>全部</value>
+  </data>
+  <data name="basic_config" xml:space="preserve">
+    <value>基础配置</value>
+  </data>
+  <data name="browse_device_config_dir" xml:space="preserve">
+    <value>选择设备配置目录</value>
+  </data>
+  <data name="cancel" xml:space="preserve">
+    <value>取消</value>
+  </data>
+  <data name="close" xml:space="preserve">
+    <value>关闭</value>
+  </data>
+  <data name="created_at" xml:space="preserve">
+    <value>创建时间</value>
+  </data>
+  <data name="customer_part_number" xml:space="preserve">
+    <value>客户料号</value>
+  </data>
+  <data name="delete" xml:space="preserve">
+    <value>删除</value>
+  </data>
+  <data name="device_config_dir" xml:space="preserve">
+    <value>设备配置目录</value>
+  </data>
+  <data name="dll_version" xml:space="preserve">
+    <value>DLL 版本</value>
+  </data>
+  <data name="edit" xml:space="preserve">
+    <value>编辑</value>
+  </data>
+  <data name="edit_product" xml:space="preserve">
+    <value>编辑产品</value>
+  </data>
+  <data name="enable_foot_pedal" xml:space="preserve">
+    <value>启用脚踏触发</value>
+  </data>
+  <data name="end" xml:space="preserve">
+    <value>结束</value>
+  </data>
+  <data name="flow_step_confirm_exception_text" xml:space="preserve">
+    <value>S 编号状态异常时点击跳过；Q 退出程序并保留待确认编号。</value>
+  </data>
+  <data name="flow_step_confirm_exception_title" xml:space="preserve">
+    <value>确认异常</value>
+  </data>
+  <data name="flow_step_config_ready_text" xml:space="preserve">
+    <value>工具栏设置保存产品与运行的必要配置，后续应用自动初始化并加载产品模板配置。</value>
+  </data>
+  <data name="flow_step_config_ready_title" xml:space="preserve">
+    <value>配置准备</value>
+  </data>
+  <data name="flow_step_number_ready_text" xml:space="preserve">
+    <value>加载配置后，根据 pattern 生成编号；编号打标状态由数据库管理，断电后可恢复。</value>
+  </data>
+  <data name="flow_step_number_ready_title" xml:space="preserve">
+    <value>编号准备</value>
+  </data>
+  <data name="flow_step_preview_mark_text" xml:space="preserve">
+    <value>P 打开红光预览；M 根据配置启动激光打标。</value>
+  </data>
+  <data name="flow_step_preview_mark_title" xml:space="preserve">
+    <value>预览/打标</value>
+  </data>
+  <data name="foot_pedal_trigger" xml:space="preserve">
+    <value>脚踏触发</value>
+  </data>
+  <data name="generator" xml:space="preserve">
+    <value>生成器</value>
+  </data>
+  <data name="history_marking_records" xml:space="preserve">
+    <value>历史打标记录</value>
+  </data>
+  <data name="marked_at" xml:space="preserve">
+    <value>打标时间</value>
+  </data>
+  <data name="marking_template" xml:space="preserve">
+    <value>打标模板</value>
+  </data>
+  <data name="name" xml:space="preserve">
+    <value>名称</value>
+  </data>
+  <data name="new_product" xml:space="preserve">
+    <value>新增产品</value>
+  </data>
+  <data name="not_read" xml:space="preserve">
+    <value>未读取</value>
+  </data>
+  <data name="product" xml:space="preserve">
+    <value>产品</value>
+  </data>
+  <data name="read_version" xml:space="preserve">
+    <value>读取版本</value>
+  </data>
+  <data name="remark" xml:space="preserve">
+    <value>备注</value>
+  </data>
+  <data name="reprint" xml:space="preserve">
+    <value>重新打标</value>
+  </data>
+  <data name="run_log" xml:space="preserve">
+    <value>运行日志</value>
+  </data>
+  <data name="save" xml:space="preserve">
+    <value>保存</value>
+  </data>
+  <data name="search" xml:space="preserve">
+    <value>查询</value>
+  </data>
+  <data name="seconds" xml:space="preserve">
+    <value>秒</value>
+  </data>
+  <data name="select_marking_template" xml:space="preserve">
+    <value>选择打标模板</value>
+  </data>
+  <data name="select_product" xml:space="preserve">
+    <value>选择产品</value>
+  </data>
+  <data name="serial_start" xml:space="preserve">
+    <value>起始流水</value>
+  </data>
+  <data name="start" xml:space="preserve">
+    <value>开始</value>
+  </data>
+  <data name="template" xml:space="preserve">
+    <value>模板</value>
+  </data>
+  <data name="timeout" xml:space="preserve">
+    <value>等待超时</value>
+  </data>
+  <data name="variable_text_alias" xml:space="preserve">
+    <value>可变文本别名</value>
+  </data>
+  <data name="already_running_message" xml:space="preserve">
+    <value>程序已经在运行，不能启动第二个实例。</value>
+  </data>
+  <data name="app_demo_title" xml:space="preserve">
+    <value>大族激光二开Demo</value>
+  </data>
+  <data name="applying_config_status" xml:space="preserve">
+    <value>正在应用配置……</value>
+  </data>
+  <data name="audit_skip_confirmed" xml:space="preserve">
+    <value>操作员确认该编号已使用或应跳过</value>
+  </data>
+  <data name="busy_retry_message" xml:space="preserve">
+    <value>系统正忙，请稍后重试。</value>
+  </data>
+  <data name="config_load_failed_fmt" xml:space="preserve">
+    <value>载入配置失败：{0}</value>
+  </data>
+  <data name="config_loaded_log" xml:space="preserve">
+    <value>已载入 config.json。通过工具栏“设置”修改并应用配置。</value>
+  </data>
+  <data name="config_saved_applied_prefix" xml:space="preserve">
+    <value>配置已保存并应用：</value>
+  </data>
+  <data name="confirm_delete_product_fmt" xml:space="preserve">
+    <value>确认删除产品 {0}？</value>
+  </data>
+  <data name="confirm_skip_message_fmt" xml:space="preserve">
+    <value>确认编号 {0} 已经使用或必须跳过？</value>
+  </data>
+  <data name="confirm_skip_title" xml:space="preserve">
+    <value>确认已用/跳过</value>
+  </data>
+  <data name="fill_device_config_dir" xml:space="preserve">
+    <value>请先填写设备配置目录</value>
+  </data>
+  <data name="generator_invalid" xml:space="preserve">
+    <value>生成器无效。</value>
+  </data>
+  <data name="mark_error_fmt" xml:space="preserve">
+    <value>打标调用异常：{0}</value>
+  </data>
+  <data name="mark_not_normal_fmt" xml:space="preserve">
+    <value>打标未正常完成：{0}。编号仍处于待确认状态。</value>
+  </data>
+  <data name="mark_now" xml:space="preserve">
+    <value>将立即激光打标。</value>
+  </data>
+  <data name="mark_success_fmt" xml:space="preserve">
+    <value>打标正常结束，编号已提交：{0}</value>
+  </data>
+  <data name="mark_wait_foot" xml:space="preserve">
+    <value>已进入激光打标等待，请踩脚踏/给触发信号。</value>
+  </data>
+  <data name="operation_failed_fmt" xml:space="preserve">
+    <value>操作失败：{0}</value>
+  </data>
+  <data name="pattern_required" xml:space="preserve">
+    <value>Pattern 不能为空。</value>
+  </data>
+  <data name="pending_new_message" xml:space="preserve">
+    <value>新编号已占用，等待预览、打标或确认跳过。</value>
+  </data>
+  <data name="pending_previous_message" xml:space="preserve">
+    <value>上次未确认完成；请检查工件/MES 后再重打或跳过。</value>
+  </data>
+  <data name="preview_busy" xml:space="preserve">
+    <value>红光预览中……</value>
+  </data>
+  <data name="preview_done_fmt" xml:space="preserve">
+    <value>红光预览结束：{0}</value>
+  </data>
+  <data name="preview_failed_fmt" xml:space="preserve">
+    <value>红光预览失败：{0}</value>
+  </data>
+  <data name="product_name_required" xml:space="preserve">
+    <value>产品名称不能为空。</value>
+  </data>
+  <data name="product_save_failed_fmt" xml:space="preserve">
+    <value>产品保存失败：{0}</value>
+  </data>
+  <data name="product_saved_message" xml:space="preserve">
+    <value>产品已保存。</value>
+  </data>
+  <data name="product_settings_invalid_fmt" xml:space="preserve">
+    <value>产品设置无效：{0}</value>
+  </data>
+  <data name="product_template_missing" xml:space="preserve">
+    <value>产品缺少打标模板。</value>
+  </data>
+  <data name="product_template_not_found" xml:space="preserve">
+    <value>找不到产品打标模板。</value>
+  </data>
+  <data name="product_template_required" xml:space="preserve">
+    <value>打标模板不能为空。</value>
+  </data>
+  <data name="read_failed_dll_missing" xml:space="preserve">
+    <value>读取失败：MachinePath 下没有 HansAdvInterface.dll</value>
+  </data>
+  <data name="read_failed_fmt" xml:space="preserve">
+    <value>读取失败：{0}</value>
+  </data>
+  <data name="reapplying_config_message" xml:space="preserve">
+    <value>正在重新应用配置，旧设备会话已关闭。</value>
+  </data>
+  <data name="reprint_busy" xml:space="preserve">
+    <value>正在重新打标历史编号...</value>
+  </data>
+  <data name="reprint_confirm_fmt" xml:space="preserve">
+    <value>确认重新打标历史编号 {0}？</value>
+  </data>
+  <data name="reprint_error_fmt" xml:space="preserve">
+    <value>历史编号重新打标异常：{0}</value>
+  </data>
+  <data name="reprint_missing_current_msg" xml:space="preserve">
+    <value>请先启动产品配置和模板，再执行重新打标。</value>
+  </data>
+  <data name="reprint_not_normal_fmt" xml:space="preserve">
+    <value>历史编号重新打标未正常完成：{0}</value>
+  </data>
+  <data name="reprint_remark" xml:space="preserve">
+    <value>历史编号重新打标</value>
+  </data>
+  <data name="reprint_success_fmt" xml:space="preserve">
+    <value>历史编号已重新打标：{0}</value>
+  </data>
+  <data name="reprint_title" xml:space="preserve">
+    <value>历史重打标</value>
+  </data>
+  <data name="reprint_wrong_product_msg" xml:space="preserve">
+    <value>请先启动该历史记录所属产品的配置和模板，再执行重新打标。</value>
+  </data>
+  <data name="reserve_failed_fmt" xml:space="preserve">
+    <value>准备当前编号失败：{0}</value>
+  </data>
+  <data name="saved_config_load_failed_fmt" xml:space="preserve">
+    <value>载入已保存配置失败：{0}</value>
+  </data>
+  <data name="saved_config_started_prefix" xml:space="preserve">
+    <value>已按保存配置启动：</value>
+  </data>
+  <data name="select_product_required" xml:space="preserve">
+    <value>请先在设置中选择产品。</value>
+  </data>
+  <data name="serial_start_range" xml:space="preserve">
+    <value>起始流水必须在 1-9999 之间。</value>
+  </data>
+  <data name="settings_invalid_fmt" xml:space="preserve">
+    <value>设置无效：{0}</value>
+  </data>
+  <data name="skip_confirmed_log_fmt" xml:space="preserve">
+    <value>已确认编号已用/跳过：{0}</value>
+  </data>
+  <data name="startup_failed_fmt" xml:space="preserve">
+    <value>启动失败：{0}</value>
+  </data>
+  <data name="startup_title" xml:space="preserve">
+    <value>启动</value>
+  </data>
+</root>
