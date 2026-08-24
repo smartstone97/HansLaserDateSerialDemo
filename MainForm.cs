@@ -72,6 +72,7 @@ namespace HansLaserDateSerialDemo
                 async delegate { await OpenSettingsAsync(SettingsPage.RunSettings); });
             _settingsMenuItem.DropDownItems.Add(Resources.prod_config, null,
                 async delegate { await OpenSettingsAsync(SettingsPage.ProductConfiguration); });
+            _settingsMenuItem.DropDownItems.Add(GetText("language"), null, delegate { OpenLanguageSelection(); });
             menuStrip.Items.Add(_settingsMenuItem);
 
             _viewMenuItem = new ToolStripMenuItem(Resources.view)
@@ -598,6 +599,23 @@ namespace HansLaserDateSerialDemo
             }
         }
 
+        private void OpenLanguageSelection()
+        {
+            using (LanguageSelectionDialog dialog = new LanguageSelectionDialog(LanguageManager.CurrentCultureName))
+            {
+                if (dialog.ShowDialog(this) != DialogResult.OK)
+                    return;
+
+                if (string.Equals(dialog.SelectedCultureName, LanguageManager.CurrentCultureName, StringComparison.OrdinalIgnoreCase))
+                    return;
+
+                LanguageManager.SaveAndApply(dialog.SelectedCultureName);
+                MessageBox.Show(this, GetText("language_restart_message"), GetText("language"), MessageBoxButtons.OK,
+                    MessageBoxIcon.Information);
+                Program.RequestRestart();
+            }
+        }
+
         private async Task ReprintRecordAsync(MarkingRecord source)
         {
             if (source == null)
@@ -754,6 +772,11 @@ namespace HansLaserDateSerialDemo
         private void Log(string message)
         {
             _log.AppendText($"{DateTime.Now:HH:mm:ss}  {message}{Environment.NewLine}");
+        }
+
+        private static string GetText(string key)
+        {
+            return Resources.ResourceManager.GetString(key, Resources.Culture) ?? key;
         }
 
         private void DisposeApi()
