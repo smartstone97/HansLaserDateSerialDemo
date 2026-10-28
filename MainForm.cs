@@ -1,6 +1,7 @@
 using System;
 using System.Drawing;
 using System.IO;
+using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Reflection;
@@ -11,6 +12,7 @@ namespace HansLaserDateSerialDemo
     {
         private const string ConfigFile = "config.json";
         private const string AuditFile = @".\mark-audit.csv";
+        private const int MaxLogLines = 1000;
 
         private readonly ToolStripMenuItem _settingsMenuItem;
         private readonly ToolStripMenuItem _viewMenuItem;
@@ -18,7 +20,10 @@ namespace HansLaserDateSerialDemo
         private Label _dateValue;
         private Label _serialValue;
         private Label _pendingWarning;
-        private TextBox _log;
+        private LogTextBox _log;
+        private System.Windows.Forms.Timer _logAutoScrollResumeTimer;
+        private bool _logAutoScrollPaused;
+        private bool _suppressLogScrollTracking;
         private Button _previewButton;
         private Button _markButton;
         private Button _skipButton;
@@ -72,6 +77,7 @@ namespace HansLaserDateSerialDemo
                 async delegate { await OpenSettingsAsync(SettingsPage.RunSettings); });
             _settingsMenuItem.DropDownItems.Add(Resources.prod_config, null,
                 async delegate { await OpenSettingsAsync(SettingsPage.ProductConfiguration); });
+            _settingsMenuItem.DropDownItems.Add(GetText("language"), null, delegate { OpenLanguageSelection(); });
             menuStrip.Items.Add(_settingsMenuItem);
 
             _viewMenuItem = new ToolStripMenuItem(Resources.view)
@@ -105,7 +111,11 @@ namespace HansLaserDateSerialDemo
 
                 await StartWithSavedConfigurationWithRetryAsync();
             };
-            FormClosing += delegate { DisposeApi(); };
+            FormClosing += delegate
+            {
+                DisposeLogAutoScrollTimer();
+                DisposeApi();
+            };
         }
 
         private Control BuildOperationPanel()
@@ -208,7 +218,7 @@ namespace HansLaserDateSerialDemo
                 Text = Resources.run_log
             };
             root.Controls.Add(logBox, 0, 3);
-            _log = new TextBox
+            _log = new LogTextBox
             {
                 Dock = DockStyle.Fill,
                 Multiline = true,
@@ -217,7 +227,15 @@ namespace HansLaserDateSerialDemo
                 Font = new Font("Consolas", 9F),
                 BackColor = Color.White
             };
+            _log.UserScrollAction += delegate { HandleLogUserScrollAction(); };
             logBox.Controls.Add(_log);
+
+            _logAutoScrollResumeTimer = new System.Windows.Forms.Timer { Interval = 30 * 1000 };
+            _logAutoScrollResumeTimer.Tick += delegate
+            {
+                _logAutoScrollResumeTimer.Stop();
+                ResumeLogAutoScroll();
+            };
 
             UpdateActionButtons();
             return root;
@@ -598,6 +616,23 @@ namespace HansLaserDateSerialDemo
             }
         }
 
+        private void OpenLanguageSelection()
+        {
+            using (LanguageSelectionDialog dialog = new LanguageSelectionDialog(LanguageManager.CurrentCultureName))
+            {
+                if (dialog.ShowDialog(this) != DialogResult.OK)
+                    return;
+
+                if (string.Equals(dialog.SelectedCultureName, LanguageManager.CurrentCultureName, StringComparison.OrdinalIgnoreCase))
+                    return;
+
+                LanguageManager.SaveAndApply(dialog.SelectedCultureName);
+                MessageBox.Show(this, GetText("language_restart_message"), GetText("language"), MessageBoxButtons.OK,
+                    MessageBoxIcon.Information);
+                Program.RequestRestart();
+            }
+        }
+
         private async Task ReprintRecordAsync(MarkingRecord source)
         {
             if (source == null)
@@ -753,7 +788,56 @@ namespace HansLaserDateSerialDemo
 
         private void Log(string message)
         {
-            _log.AppendText($"{DateTime.Now:HH:mm:ss}  {message}{Environment.NewLine}");
+            bool shouldAutoScroll = !_logAutoScrollPaused || _log.IsScrolledToBottom();
+
+            _suppressLogScrollTracking = true;
+            try
+            {
+                _log.AppendLogText($"{DateTime.Now:HH:mm:ss}  {message}{Environment.NewLine}", shouldAutoScroll, MaxLogLines);
+            }
+            finally
+            {
+                _suppressLogScrollTracking = false;
+            }
+
+            if (shouldAutoScroll)
+                ResumeLogAutoScroll();
+        }
+
+        private void HandleLogUserScrollAction()
+        {
+            if (_suppressLogScrollTracking)
+                return;
+
+            if (_log.IsScrolledToBottom())
+            {
+                ResumeLogAutoScroll();
+                return;
+            }
+
+            _logAutoScrollPaused = true;
+            _logAutoScrollResumeTimer.Stop();
+            _logAutoScrollResumeTimer.Start();
+        }
+
+        private void ResumeLogAutoScroll()
+        {
+            _logAutoScrollPaused = false;
+            _logAutoScrollResumeTimer.Stop();
+            _suppressLogScrollTracking = true;
+            try
+            {
+                _log.ScrollToBottom();
+            }
+            finally
+            {
+                _suppressLogScrollTracking = false;
+            }
+        }
+
+        private static string GetText(string key)
+        {
+            return Resources.ResourceManager.GetString(key, Resources.Culture) ?? key;
         }
 
         private void DisposeApi()
@@ -762,6 +846,171 @@ namespace HansLaserDateSerialDemo
             {
                 _api.Dispose();
                 _api = null;
+            }
+        }
+
+        private void DisposeLogAutoScrollTimer()
+        {
+            if (_logAutoScrollResumeTimer == null)
+                return;
+
+            _logAutoScrollResumeTimer.Stop();
+            _logAutoScrollResumeTimer.Dispose();
+            _logAutoScrollResumeTimer = null;
+        }
+
+        private sealed class LogTextBox : TextBox
+        {
+            private const int EmGetFirstVisibleLine = 0x00CE;
+            private const int EmLineScroll = 0x00B6;
+            private const int WmVScroll = 0x0115;
+            private const int WmMouseWheel = 0x020A;
+            private const int SbVert = 1;
+            private const uint SifRange = 0x0001;
+            private const uint SifPage = 0x0002;
+            private const uint SifPos = 0x0004;
+
+            public event EventHandler UserScrollAction;
+
+            public bool IsScrolledToBottom()
+            {
+                if (!IsHandleCreated)
+                    return true;
+
+                ScrollInfo info = new ScrollInfo
+                {
+                    cbSize = Marshal.SizeOf(typeof(ScrollInfo)),
+                    fMask = SifRange | SifPage | SifPos
+                };
+
+                if (!GetScrollInfo(Handle, SbVert, ref info))
+                    return true;
+
+                return info.nPos + Math.Max(1, info.nPage) >= info.nMax;
+            }
+
+            public void AppendLogText(string text, bool scrollToBottom, int maxLines)
+            {
+                if (scrollToBottom)
+                {
+                    AppendText(text);
+                    TrimToRecentLines(maxLines, out _);
+                    ScrollToBottom();
+                    return;
+                }
+
+                int firstVisibleLine = GetFirstVisibleLine();
+                int selectionStart = SelectionStart;
+                int selectionLength = SelectionLength;
+
+                AppendText(text);
+                int removedLines = TrimToRecentLines(maxLines, out int removedCharacters);
+
+                SelectionStart = Math.Min(Math.Max(0, selectionStart - removedCharacters), TextLength);
+                SelectionLength = Math.Min(selectionLength, TextLength - SelectionStart);
+                ScrollToLine(Math.Max(0, firstVisibleLine - removedLines));
+            }
+
+            public void ScrollToBottom()
+            {
+                SelectionStart = TextLength;
+                SelectionLength = 0;
+                ScrollToCaret();
+            }
+
+            protected override void WndProc(ref Message m)
+            {
+                bool userScrollMessage = m.Msg == WmVScroll || m.Msg == WmMouseWheel;
+                base.WndProc(ref m);
+
+                if (userScrollMessage)
+                    OnUserScrollAction();
+            }
+
+            protected override void OnKeyDown(KeyEventArgs e)
+            {
+                base.OnKeyDown(e);
+                if (IsScrollKey(e))
+                    OnUserScrollAction();
+            }
+
+            protected override void OnMouseUp(MouseEventArgs e)
+            {
+                base.OnMouseUp(e);
+                OnUserScrollAction();
+            }
+
+            private int GetFirstVisibleLine()
+            {
+                return IsHandleCreated ? SendMessage(Handle, EmGetFirstVisibleLine, IntPtr.Zero, IntPtr.Zero).ToInt32() : 0;
+            }
+
+            private void ScrollToLine(int line)
+            {
+                int currentFirstLine = GetFirstVisibleLine();
+                SendMessage(Handle, EmLineScroll, IntPtr.Zero, new IntPtr(line - currentFirstLine));
+            }
+
+            private int TrimToRecentLines(int maxLines, out int removedCharacters)
+            {
+                removedCharacters = 0;
+                if (maxLines <= 0)
+                {
+                    removedCharacters = TextLength;
+                    Clear();
+                    return int.MaxValue;
+                }
+
+                string[] lines = Lines;
+                int logLineCount = lines.Length;
+                if (logLineCount > 0 && string.IsNullOrEmpty(lines[logLineCount - 1]))
+                    logLineCount--;
+
+                int removedLines = logLineCount - maxLines;
+                if (removedLines <= 0)
+                    return 0;
+
+                int firstKeptCharacter = GetFirstCharIndexFromLine(removedLines);
+                if (firstKeptCharacter <= 0)
+                    return 0;
+
+                Select(0, firstKeptCharacter);
+                SelectedText = string.Empty;
+                removedCharacters = firstKeptCharacter;
+                return removedLines;
+            }
+
+            private void OnUserScrollAction()
+            {
+                UserScrollAction?.Invoke(this, EventArgs.Empty);
+            }
+
+            private static bool IsScrollKey(KeyEventArgs e)
+            {
+                return e.KeyCode == Keys.Up ||
+                       e.KeyCode == Keys.Down ||
+                       e.KeyCode == Keys.PageUp ||
+                       e.KeyCode == Keys.PageDown ||
+                       e.KeyCode == Keys.Home ||
+                       e.KeyCode == Keys.End;
+            }
+
+            [DllImport("user32.dll")]
+            private static extern IntPtr SendMessage(IntPtr hWnd, int msg, IntPtr wParam, IntPtr lParam);
+
+            [DllImport("user32.dll", SetLastError = true)]
+            private static extern bool GetScrollInfo(IntPtr hwnd, int nBar, ref ScrollInfo lpsi);
+
+            [StructLayout(LayoutKind.Sequential)]
+            private struct ScrollInfo
+            {
+                public int cbSize;
+                public uint fMask;
+                public int nMin;
+                public int nMax;
+                public uint nPage;
+                public int nPos;
+                public int nTrackPos;
             }
         }
     }

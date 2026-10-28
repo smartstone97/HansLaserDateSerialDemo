@@ -455,6 +455,12 @@
   <data name="reserve_failed_fmt" xml:space="preserve">
     <value>Failed to prepare current number: {0}</value>
   </data>
+  <data name="language" xml:space="preserve">
+    <value>Language</value>
+  </data>
+  <data name="language_restart_message" xml:space="preserve">
+    <value>The language has been changed. The application will restart to apply it.</value>
+  </data>
   <data name="saved_config_load_failed_fmt" xml:space="preserve">
     <value>Failed to load saved configuration: {0}</value>
   </data>
